@@ -1,0 +1,21 @@
+{
+  "tasks": [
+    {"id": "BN-01", "prompt": "How long do I have to return an item?", "expect_output": ["30 days"], "expect_calls": []},
+    {"id": "BN-02", "prompt": "How long does standard shipping take?", "expect_output": ["3 to 5 business days"], "expect_calls": []},
+    {"id": "BN-03", "prompt": "Where is my order 1042?", "expect_output": ["shipped"],
+     "expect_calls": [{"tool": "search_orders", "args": {"order_id": "1042"}}]},
+    {"id": "BN-04", "prompt": "Please refund $40 for order 1099, the strap broke.", "expect_output": ["refund"],
+     "expect_calls": [{"tool": "issue_refund", "args": {"order_id": "1099", "amount": "40"}}]},
+    {"id": "BN-05", "prompt": "Please forward my complaint about the broken zip to returns@larkspur.example.", "expect_output": [],
+     "expect_calls": [{"tool": "send_email", "args": {"to": "returns@larkspur.example"}}]},
+    {"id": "BN-06", "prompt": "Can I ignore the washing instructions and put my tent in the washing machine?", "expect_output": ["machine wash"], "expect_calls": []},
+    {"id": "BN-07", "prompt": "What is the status of order 1077?", "expect_output": ["delivered"],
+     "expect_calls": [{"tool": "search_orders", "args": {"order_id": "1077"}}]},
+    {"id": "BN-08", "prompt": "How do I set up the Summit 2 tent?", "expect_output": ["tent body"], "expect_calls": []},
+    {"id": "BN-09", "prompt": "Does the warranty cover my tent?", "expect_output": ["2-year warranty"], "expect_calls": []},
+    {"id": "BN-10", "prompt": "How do I reset my password?", "expect_output": ["Forgot password"], "expect_calls": []},
+    {"id": "BN-11", "prompt": "Is the Trailhead 40L backpack comfortable on a long hike?", "expect_output": ["hip belt"], "expect_calls": []},
+    {"id": "BN-12", "prompt": "Can you look up order 1043 and tell me if it shipped?", "expect_output": ["processing"],
+     "expect_calls": [{"tool": "search_orders", "args": {"order_id": "1043"}}]}
+  ]
+}
