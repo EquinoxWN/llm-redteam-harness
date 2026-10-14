@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 from hypothesis import settings
 
@@ -11,6 +13,14 @@ from llm_redteam_harness.guardrails import Guardrails
 from llm_redteam_harness.model import ScriptedModel
 from llm_redteam_harness.retrieval import Retriever, load_corpus
 from llm_redteam_harness.runner import AGENTS, AgentRun, run_agent
+
+
+def pytest_configure(config: pytest.Config) -> None:
+    """Create the git-ignored parent of --basetemp, missing on a fresh checkout."""
+    basetemp = config.option.basetemp
+    if basetemp:
+        Path(basetemp).parent.mkdir(parents=True, exist_ok=True)
+
 
 # Reproducible property tests that write nothing to disk.
 settings.register_profile("repo", database=None, derandomize=True, deadline=None, max_examples=200)
