@@ -76,3 +76,13 @@ def test_list_shows_every_attack(capsys: pytest.CaptureFixture[str]) -> None:
     lines = capsys.readouterr().out.splitlines()
     assert len(lines) == 44
     assert lines[-1] == "not covered: LLM03 Supply Chain, LLM04 Data and Model Poisoning"
+
+
+def test_reports_are_replaced_whole_with_no_temporary_files(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    path = tmp_path / "out" / "baseline.json"
+    for _ in range(2):
+        assert main(["run", "--write-baseline", str(path)]) == EXIT_OK
+    assert [p.name for p in path.parent.iterdir()] == ["baseline.json"]
+    assert json.loads(path.read_text(encoding="utf-8"))["schema"] == 1

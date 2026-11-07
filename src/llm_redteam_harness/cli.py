@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
+import tempfile
 from collections.abc import Sequence
 from pathlib import Path
 from typing import Final
@@ -25,10 +27,17 @@ EXIT_USAGE: Final = 2
 
 
 def _write(path: str, text: str) -> None:
-    """Write a UTF-8 text file, creating its folder."""
+    """Write a UTF-8 text file atomically (temporary file, then rename), creating its folder."""
     target = Path(path)
     target.parent.mkdir(parents=True, exist_ok=True)
-    target.write_text(text, encoding="utf-8")
+    fd, tmp = tempfile.mkstemp(dir=target.parent, prefix=f".{target.name}.", suffix=".part")
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="") as out:
+            out.write(text)
+        os.replace(tmp, target)
+    except BaseException:
+        Path(tmp).unlink(missing_ok=True)
+        raise
 
 
 def _parser() -> argparse.ArgumentParser:
