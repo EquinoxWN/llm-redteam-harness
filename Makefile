@@ -9,7 +9,7 @@ setup:
 lint:
 	$(PY) -m ruff check . && $(PY) -m ruff format --check . && $(PY) -m mypy
 
-# 184 tests: model, retrieval, tools, guardrails, detectors, fixtures, agent, end-to-end runs, gate, CLI.
+# 191 tests: model, retrieval, tools, guardrails, detectors, fixtures, agent, end-to-end runs, gate, CLI.
 test:
 	$(PY) -m pytest -q
 

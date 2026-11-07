@@ -26,7 +26,7 @@ off makes the gate fail with exit code 1 and names the eight attacks that now su
 
 ![red-team run and a failing regression gate](docs/proof/run.jpg)
 
-184 tests pass; ruff, mypy `--strict` and pip-audit are clean:
+191 tests pass (184 when this screenshot was taken); ruff, mypy `--strict` and pip-audit are clean:
 
 ![pytest, lint and audit output](docs/proof/tests.jpg)
 
@@ -118,7 +118,7 @@ Language: **Python** (3.11+, standard library only at runtime). Code in
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 make setup      # install the package and dev tools (exact versions from constraints.txt)
 make lint       # ruff, ruff format, mypy --strict
-make test       # 184 tests (15 to 40 s)
+make test       # 191 tests (15 to 40 s)
 make run        # all suites, both agents; report in .tmp/report.json and .tmp/report.md
 make gate       # the CI gate: exit 1 if the hardened agent regresses
 make audit      # pip-audit
@@ -149,11 +149,12 @@ Full numbers, commands and the DMAIC record: [docs/results/m1.md](docs/results/m
 | `test_agent.py` | 9 | the agent loop: prompts and tools per configuration, input cap, tool-output injection, blocked calls reported back, 1,000-call cap, 4-step limit with a second pluggable model |
 | `test_runner.py` | 15 | end to end: weak 42/43, hardened residuals pinned, no residual leaks the token or runs a forbidden tool, 12/12 utility, each of the 8 guardrails blocks an attack on its own, identical reruns |
 | `test_gate.py` | 8 | the committed baseline matches; removed defences, swapped residuals, utility drops and a failing control all fail the gate; improvements pass |
-| `test_cli.py` | 6 | `run`, `--gate`, `--write-baseline`, `--disable`, `ask`, `list`, exit codes 0, 1 and 2 |
+| `test_cli.py` | 7 | `run`, `--gate`, `--write-baseline`, `--disable`, `ask`, `list`, exit codes 0, 1 and 2; reports replaced whole with no temporary files left |
+| `test_quality.py` | 6 | edges found by the [mutation check](docs/quality/2026-11-01.md): the $200 refund limit to the cent, look-alike domains, a secret in another case, success always counts as fooled, an input-blocked benign task fails, a 1-point rise fails the gate |
 
 | Check | Result |
 |---|---|
-| Tests (`make test`) | **184 passed**, 0 failed (Windows 11, Python 3.14.5) |
+| Tests (`make test`) | **191 passed**, 0 failed (Windows 11, Python 3.14.5) |
 | Attack success rate, all 43 attacks | weak **42/43 (97.7%)**, hardened **6/43 (14.0%)** |
 | Per suite, weak / hardened | direct injection 11/12 / 3/12; indirect 8/8 / 1/8; secret exfiltration 14/14 / 2/14; tool abuse 9/9 / 0/9 |
 | Per OWASP category, hardened | LLM01 4/30, LLM02 2/16, LLM05 0/3, LLM06 0/14, LLM07 2/4, LLM08 0/6, LLM09 1/2, LLM10 0/1 |
